@@ -1,0 +1,37 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Jafet Melendez",
+      "correo": "jafet@example.com",
+      "rol": "cliente",
+      "fecha_registro": "2025-04-18T14:30:00Z"
+    }
+  ],
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Laptop Acer Nitro 15",
+      "descripcion": "Laptop gamer con tarjeta gráfica dedicada",
+      "precio": 950.00,
+      "stock": 12,
+      "categoria": "Tecnologia",
+      "fecha_creacion": "2025-04-15T10:00:00Z"
+    }
+  ],
+  "ordenes": [
+    {
+      "id": 1,
+      "usuario_id": 1,
+      "productos": [
+        {
+          "producto_id": 1,
+          "cantidad": 1
+        }
+      ],
+      "total": 950.00,
+      "fecha": "2025-04-18T15:00:00Z",
+      "estado": "procesando"
+    }
+  ]
+}
