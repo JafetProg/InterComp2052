@@ -1,0 +1,7 @@
+POST  http://localhost:5000/crear_usuario
+Content-Type: application/json
+
+ {
+   "nombre":" Jafet1",
+   "correo":" jDough12456gmail.com"
+}
