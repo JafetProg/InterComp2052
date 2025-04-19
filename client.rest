@@ -1,0 +1,16 @@
+###  GET página principal
+GET http://localhost:5000/
+
+###  GET info
+GET http://localhost:5000/info
+
+###  Get mensajes
+GET http://localhost:5000/mensaje
+
+### Post mensajes
+POST http://localhost:5000/mensaje
+Content-Type: application/json
+
+{
+  "mensaje": "Hola soy Jafet Melendez"
+}
