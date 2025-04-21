@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Mi Aplicacion{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h2>Mi pagina</h2>
+        <nav>
+            <a href="/">Inicio</a> |
+            <a href="/tareas">Tareas</a> |
+            <a href="/usuarios">Usuarios</a>
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p>Pie de pagina comun</p>
+    </footer>
+</body>
+</html>
