@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block title %}Panel de Consultas Médicas{% endblock %}
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h3 class="fw-bold">
+      <i class="fas fa-clipboard-medical me-2"></i>Gestión de Consultas
+    </h3>
+  </div>
+  <div class="col text-end">
+    {% if current_user.role.name in ['Medico', 'Admin'] %}
+    <a class="btn btn-primary mb-3 me-2" href="{{ url_for('main.nueva_consulta') }}">
+      <i class="fas fa-plus-circle me-1"></i> Nueva Consulta
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th class="text-nowrap">Fecha y Hora</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Motivo</th>
+        <th>Diagnóstico</th>
+        <th class="text-center">Estado</th>
+        <th class="text-center">Observaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if consultas %}
+        {% for consulta in consultas %}
+        <tr>
+          <td class="text-nowrap">{{ consulta.fecha_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>{{ consulta.paciente.username }}</td>
+          <td>Dr. {{ consulta.medico.username }}</td>
+          <td>{{ consulta.motivo|truncate(30, true) }}</td>
+          <td>{{ consulta.diagnostico|truncate(30, true) or '--' }}</td>
+          <td class="text-center">
+            <span class="badge rounded-pill 
+              {% if consulta.estado == 'Realizada' %}bg-success
+              {% elif consulta.estado == 'Cancelada' %}bg-danger
+              {% else %}bg-warning text-dark{% endif %}">
+              {{ consulta.estado }}
+            </span>
+          </td>
+          <td class="text-center text-nowrap">
+            {% if current_user.role.name in ['Medico', 'Admin'] %}
+            <div class="btn-group" role="group">
+              <a class="btn btn-sm btn-info me-1" 
+                 href="{{ url_for('main.ver_consulta', id=consulta.id) }}"
+                 title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </a>
+              <a class="btn btn-sm btn-warning me-1"
+                 href="{{ url_for('main.editar_consulta', id=consulta.id) }}"
+                 title="Editar consulta">
+                <i class="fas fa-edit"></i>
+              </a>
+              {% if consulta.estado != 'Cancelada' %}
+              <form method="POST"
+                    action="{{ url_for('main.cancelar_consulta', id=consulta.id) }}"
+                    class="d-inline"
+                    onsubmit="return confirm('¿Confirmar cancelación de esta consulta?');">
+                <button type="submit" class="btn btn-sm btn-danger" title="Cancelar"
+                  {% if consulta.estado == 'Realizada' %}disabled{% endif %}>
+                  <i class="fas fa-times-circle"></i>
+                </button>
+              </form>
+              {% endif %}
+            </div>
+            {% else %}
+            <a class="btn btn-sm btn-outline-primary"
+               href="{{ url_for('main.ver_consulta', id=consulta.id) }}">
+              <i class="fas fa-info-circle me-1"></i>Detalle
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="7" class="text-center py-4 text-muted">
+            <i class="fas fa-calendar-times fa-2x mb-2"></i><br>
+            No hay consultas registradas
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% if current_user.role.name == 'Paciente' %}
+<div class="alert alert-info mt-4">
+  <div class="d-flex align-items-center">
+    <i class="fas fa-info-circle fa-lg me-3"></i>
+    <div>
+      <h5 class="alert-heading mb-2">¿Necesita una consulta?</h5>
+      <p class="mb-0">
+        Para agendar nuevas consultas médicas, por favor contacte a recepción 
+        o utilice nuestro sistema de agendamiento en línea.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<footer class="mt-5 text-center text-muted small">
+  
+{% endblock %}

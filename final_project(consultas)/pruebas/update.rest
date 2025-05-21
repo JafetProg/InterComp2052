@@ -1,0 +1,11 @@
+### Actualizar una consulta médica (PUT)
+PUT http://localhost:5000/consultas/4
+Content-Type: application/json
+
+{
+  "fecha": "2023-11-15",
+  "motivo": "Control postoperatorio",
+  "diagnostico": "Paciente evoluciona favorablemente",
+  "receta": "Paracetamol 500mg cada 8 horas por 3 días",
+  "estado": "Completada"
+}

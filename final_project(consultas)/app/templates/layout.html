@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Sistema de Consultas Médicas{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome para iconos médicos -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Estilos personalizados -->
+    <style>
+      .navbar-medical {
+        background-color: #0d6efd !important;
+      }
+      .medical-brand {
+        font-weight: 600;
+      }
+      .medical-icon {
+        margin-right: 5px;
+      }
+      body {
+        background-color: #f8f9fa;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de navegación médica -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-medical">
+      <div class="container-fluid">
+        <a class="navbar-brand medical-brand" href="{{ url_for('main.index') }}">
+          <i class="fas fa-hospital medical-icon"></i>Clínica Salud Integral
+        </a>
+
+        <!-- Botón para móviles -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarMedical"
+          aria-controls="navbarMedical"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido de la barra de navegación -->
+        <div class="collapse navbar-collapse" id="navbarMedical">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.dashboard') }}">
+                <i class="fas fa-tachometer-alt medical-icon"></i>Panel
+              </a>
+            </li>
+            
+            {% if current_user.role.name in ['Medico', 'Admin'] %}
+            <li class="nav-item">
+                </a>  
+              </a>
+            </li>
+            {% endif %}
+            
+            {% if current_user.role.name == 'Admin' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('main.listar_usuarios') }}">
+                  <i class="fas fa-users medical-icon"></i>Personal
+                </a>
+              </a>
+            </li>
+            {% endif %}
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.cambiar_password') }}">
+                <i class="fas fa-key medical-icon"></i>Seguridad
+              </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user-circle medical-icon"></i>
+                {% if current_user.role.name == 'Medico' %}Dr.{% endif %} 
+                {{ current_user.nombre }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                  <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                </a></li>
+              </ul>
+            </li>
+            
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.login') }}">
+                <i class="fas fa-sign-in-alt medical-icon"></i>Iniciar Sesión
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.register') }}">
+                <i class="fas fa-user-plus medical-icon"></i>Registro
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+      <!-- Mensajes flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer médico -->
+    <footer class="mt-5 py-3 bg-light">
+      <div class="container text-center text-muted">
+        <small>
+          <i class="fas fa-shield-alt me-1"></i>Sistema de Consultas Médicas - 
+          © <span class="current-year"></span> Clínica Salud Integral. Todos los derechos reservados.
+        </small>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Actualizar el año del copyright
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.current-year').textContent = new Date().getFullYear();
+      });
+    </script>
+  </body>
+</html>

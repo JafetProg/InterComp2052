@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Sistema de Consultas Médicas{% endblock %}
+{% block content %}
+<div class="text-center">
+  <div class="medical-header">
+    <i class="fas fa-hospital-alt fa-4x mb-4 text-primary"></i>
+    <h1 class="mt-3">Bienvenido al Sistema de Consultas Médicas</h1>
+    
+    {% if current_user.is_authenticated %}
+      {% if current_user.role.name == 'Medico' %}
+        <p class="lead text-muted mt-3">
+          <i class="fas fa-user-md me-2"></i>Bienvenido Dr. {{ current_user.apellido }}
+        </p>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary mt-3">
+          <i class="fas fa-clipboard-list me-2"></i>Ir a Consultas
+        </a>
+      {% elif current_user.role.name == 'Paciente' %}
+        <p class="lead text-muted mt-3">
+          <i class="fas fa-user me-2"></i>Bienvenido {{ current_user.nombre }}
+        </p>
+        <a href="{{ url_for('main.mis_consultas') }}" class="btn btn-outline-primary mt-3">
+          <i class="fas fa-calendar-check me-2"></i>Mis Citas Médicas
+        </a>
+      {% else %}
+        <p class="lead text-muted mt-3">
+          <i class="fas fa-cog me-2"></i>Panel de Administración
+        </p>
+      {% endif %}
+    {% else %}
+      <div class="medical-access mt-4">
+        <p class="lead text-body-secondary">
+          <i class="fas fa-sign-in-alt me-2"></i>Inicie sesión para acceder al sistema
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-3">
+          <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+          </a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-user-plus me-2"></i>Registrarse
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .medical-header {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .medical-access {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+</style>
+{% endblock %}

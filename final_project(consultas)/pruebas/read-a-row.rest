@@ -1,0 +1,3 @@
+### Obtener consulta médica por ID (GET)
+GET http://localhost:5000/consultas/1
+Content-Type: application/json

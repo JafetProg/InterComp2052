@@ -1,0 +1,11 @@
+### Crear un nuevo curso (POST)
+POST http://localhost:5000/consultas
+Content-Type: application/json
+
+{
+  "paciente_id": 1,
+  "medico_id": 2,
+  "fecha_hora": "2025-05-20",
+  "motivo": "Dolor abdominal persistente",
+  "diagnostico": "Posible gastritis"
+}

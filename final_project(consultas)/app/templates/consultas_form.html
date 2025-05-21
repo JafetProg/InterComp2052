@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+
+{% block title %}Nueva Consulta Médica{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0"><i class="fas fa-calendar-plus me-2"></i>Nueva Consulta Médica</h3>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('main.guardar_consulta') }}" novalidate>
+        {{ form.hidden_tag() }}
+
+        <!-- Selección de Paciente -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label fw-bold">Paciente</label>
+              <select class="form-select" name="paciente_id" required>
+                <option value="">Seleccione un paciente...</option>
+                {% for paciente in pacientes %}
+                <option value="{{ paciente.id }}">{{ paciente.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Selección de Médico -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label fw-bold">Médico</label>
+              {% if current_user.role.name == 'Admin' %}
+              <select class="form-select" name="medico_id" required>
+                <option value="">Seleccione un médico...</option>
+                {% for medico in medicos %}
+                <option value="{{ medico.id }}">Dr. {{ medico.username }}</option>
+                {% endfor %}
+              </select>
+              {% else %}
+              <input type="text" class="form-control" 
+                     value="Dr. {{ current_user.username }}" readonly>
+              <input type="hidden" name="medico_id" value="{{ current_user.id }}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label fw-bold">Fecha</label>
+              <input type="date" class="form-control" name="fecha" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label fw-bold">Hora</label>
+              <input type="time" class="form-control" name="hora" min="08:00" max="17:00" required>
+              <small class="text-muted">Horario: 8:00 AM - 5:00 PM</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Motivo y Diagnóstico -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Motivo de la Consulta</label>
+          <textarea class="form-control" name="motivo" rows="3" required placeholder="Describa el motivo de la consulta"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Diagnóstico</label>
+          <textarea class="form-control" name="diagnostico" rows="3" placeholder="Describa el diagnóstico (opcional)"></textarea>
+        </div>
+
+        <!-- Estado -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Estado</label>
+          <select class="form-select" name="estado" required>
+            <option value="agendada" selected>Agendada</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+          <a href="{{ url_for('main.nueva_consultas') }}" class="btn btn-secondary me-md-2">
+            <i class="fas fa-times me-1"></i> Cancelar
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Guardar Consulta
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+  .card {
+    border-radius: 10px;
+  }
+  .form-label {
+    margin-bottom: 0.5rem;
+  }
+  textarea.form-control {
+    min-height: 100px;
+  }
+</style>
+
+<!-- Validación básica -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Validar fecha no pasada
+  const fechaInput = document.querySelector('input[name="fecha"]');
+  if(fechaInput) {
+    fechaInput.addEventListener('change', function() {
+      const selectedDate = new Date(this.value);
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      if(selectedDate < today) {
+        alert('No puede seleccionar fechas pasadas');
+        this.value = '';
+      }
+    });
+  }
+
+  // Validar horario
+  const horaInput = document.querySelector('input[name="hora"]');
+  if(horaInput) {
+    horaInput.addEventListener('change', function() {
+      const time = this.value.split(':');
+      const hours = parseInt(time[0]);
+      if(hours < 8 || hours >= 17) {
+        alert('El horario de atención es de 8:00 AM a 5:00 PM');
+        this.value = '';
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

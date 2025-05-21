@@ -1,0 +1,4 @@
+### Obtener todas las consultas medicas(GET)
+
+GET http://localhost:5000/consultas
+Content-Type: application/json
